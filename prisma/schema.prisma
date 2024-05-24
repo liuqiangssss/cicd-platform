@@ -11,32 +11,22 @@ datasource db {
 }
 
 model User {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId String  @unique
-  topic  Topic[]
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  usename     String
+  ssh         String
+  createdTime DateTime      @default(now()) @map("created_time")
+  updatedTime DateTime      @updatedAt @map("updated_time")
+  application Application[]
+
+  @@map("user")
 }
 
-model Topic {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  user    User     @relation(fields: [userId], references: [userId])
-  userId  String
-  avatar  String
-  content String
-  images  String[]
-  options Option[]
-}
-
-model Option {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  topic   Topic  @relation(fields: [topicId], references: [id])
-  topicId String @db.ObjectId
-  key     String
-  value   Int
-}
-
-model Record {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  topicId String
-  userId  String
-  choice  String
+model Application {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  user            User   @relation(fields: [userId], references: [id])
+  userId          String @db.ObjectId
+  address         String
+  name            String @unique
+  dockerfile_path String
+  path            String
 }
